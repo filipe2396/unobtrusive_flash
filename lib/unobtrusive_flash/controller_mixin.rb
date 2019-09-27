@@ -5,7 +5,7 @@ module UnobtrusiveFlash
     protected
 
     def prepare_unobtrusive_flash
-      return unless flash.any?
+      return if response_body[0].match(/Turbolinks.visit/) || flash.empty?
       # TODO: replace configuration based on overriding methods with a conventional config block
       cookies[:flash] = {
         value: UnobtrusiveFlash::ControllerMixin.append_flash_to_cookie(cookies[:flash], flash, unobtrusive_flash_keys),
