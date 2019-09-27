@@ -4,7 +4,7 @@ require 'rails'
 
 module UnobtrusiveFlash
   class Engine < ::Rails::Engine
-    initializer 'unobtrusive_flash.initialize', :after => :after_initialize do
+    ActiveSupport.on_load :action_controller do
       ActionController::Base.send :include, UnobtrusiveFlash::ControllerMixin
     end
   end
