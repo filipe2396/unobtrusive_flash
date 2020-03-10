@@ -5,13 +5,18 @@ module UnobtrusiveFlash
     protected
 
     def prepare_unobtrusive_flash
-      return if response_body[0].match(/Turbolinks.visit/) || flash.empty?
-      # TODO: replace configuration based on overriding methods with a conventional config block
-      cookies[:flash] = {
-        value: UnobtrusiveFlash::ControllerMixin.append_flash_to_cookie(cookies[:flash], flash, unobtrusive_flash_keys),
-        domain: unobtrusive_flash_domain
-      }
-      flash.discard
+      return if flash.empty?
+      
+      if response_body[0].match(/Turbolinks.visit/)
+        flash.keep
+      else
+        # TODO: replace configuration based on overriding methods with a conventional config block
+        cookies[:flash] = {
+          value: UnobtrusiveFlash::ControllerMixin.append_flash_to_cookie(cookies[:flash], flash, unobtrusive_flash_keys),
+          domain: unobtrusive_flash_domain
+        }
+        flash.discard
+      end
     end
 
     # Setting cookies for :all domains is broken for Heroku apps, read this article for details
